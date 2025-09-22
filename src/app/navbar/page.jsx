@@ -1,0 +1,197 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { auth } from "../../firebase.config";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
+import SignOut from "./signout/page"; // this is your modal component
+import { logout } from "@/redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+
+
+const Navbar = () => {
+  const [user, setUser] = useState(null);
+  const [storedName, setStoredName] = useState(null);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openLogoutModal, setOpenLogoutModal] = useState(false);
+  const open = Boolean(anchorEl);
+  const router = useRouter();
+  const pathname = usePathname();
+  const dispatch = useDispatch();
+
+  const profileName = storedName?.[0]?.toUpperCase() || "";
+
+  useEffect(() => {
+    setIsHydrated(true);
+
+    // Check localStorage only after hydration
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      setStoredName(userName);
+    }
+
+    // Listen for auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Hide navbar on signin/signup pages
+  if (pathname === "/login/signin" || pathname === "/login/signup") {
+    return null;
+  }
+
+  // Show skeleton until hydrated
+  if (!isHydrated) {
+    return (
+      <nav className="bg-gray-800 p-4 text-white">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="w-24 h-8 bg-gray-600 rounded animate-pulse"></div>
+        </div>
+      </nav>
+    );
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      dispatch(logout());
+      setStoredName(null);
+      router.push("/login/signin");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    } finally {
+      setOpenLogoutModal(false);
+    }
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <nav className="bg-gray-800 p-4 text-white">
+      <div className="container mx-auto flex justify-between items-center">
+        <div className="text-xl font-bold"></div>
+        <div className="flex items-center">
+          <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+            <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+            <Typography sx={{ minWidth: 100 }}>About</Typography>
+            <Tooltip title="Account settings">
+              <IconButton
+                onClick={handleClick}
+                size="small"
+                sx={{ ml: 2 }}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+              >
+                <Avatar sx={{ width: 32, height: 32 }}>{profileName}</Avatar>
+              </IconButton>
+            </Tooltip>
+          </Box>
+
+          {/* Dropdown Menu */}
+          <Menu
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={open}
+            onClose={handleClose}
+            slotProps={{
+              paper: {
+                elevation: 0,
+                sx: {
+                  overflow: "visible",
+                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  mt: 1.5,
+                  "& .MuiAvatar-root": {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  "&::before": {
+                    content: '""',
+                    display: "block",
+                    position: "absolute",
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: "background.paper",
+                    transform: "translateY(-50%) rotate(45deg)",
+                    zIndex: 0,
+                  },
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem onClick={handleClose}>
+              <Avatar /> Profile
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Avatar /> My account
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <PersonAdd fontSize="small" />
+              </ListItemIcon>
+              Add another account
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+            <MenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
+                setOpenLogoutModal(true);
+              }}
+            >
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </Menu>
+        </div>
+      </div>
+
+      {/*  Modal placed OUTSIDE of Menu */}
+      <SignOut
+        open={openLogoutModal}
+        onClose={() => setOpenLogoutModal(false)}
+        onConfirm={handleLogout}
+      />
+    </nav>
+  );
+};
+
+export default Navbar;
