@@ -203,7 +203,39 @@ const SignUp = () => {
           </Select>
         </FormControl>
 
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+<TextField
+  name="dob"
+  id="dob"
+  type="date"
+  value={dob ? dob.toISOString().split('T')[0] : ''}
+  onChange={(e) => setDob(e.target.value ? new Date(e.target.value) : null)}
+  label="Date of Birth"
+  variant="standard"
+  sx={{
+    ...inputSx,
+    mb: 3,
+    // Make the calendar icon white
+    "& input[type='date']::-webkit-calendar-picker-indicator": {
+      filter: "invert(1)",
+      cursor: "pointer",
+    },
+    // Remove placeholder text for date input
+    "& input[type='date']:invalid": {
+      color: "transparent",
+    },
+    "& input[type='date']:focus:invalid": {
+      color: "white",
+    },
+  }}
+  InputLabelProps={{
+    shrink: true,
+  }}
+  inputProps={{
+    max: new Date().toISOString().split('T')[0], // Disable future dates
+  }}
+/>
+
+        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
   <DatePicker
     label="Date of Birth"
     value={dob}
@@ -211,6 +243,7 @@ const SignUp = () => {
     disableFuture
     openTo="year"
     views={["year", "month", "day"]}
+    className="border-b !border-white mb-6"
     slotProps={{
       textField: {
         variant: "standard",
@@ -244,7 +277,7 @@ const SignUp = () => {
       },
     }}
   />
-</LocalizationProvider>
+</LocalizationProvider> */}
 
 
         <Button
