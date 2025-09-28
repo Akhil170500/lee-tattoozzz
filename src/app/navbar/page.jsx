@@ -18,6 +18,8 @@ import Logout from "@mui/icons-material/Logout";
 import SignOut from "./signout/page"; // this is your modal component
 import { logout } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import Link from "next/link";
 
 
 const Navbar = () => {
@@ -32,6 +34,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   const profileName = storedName?.[0]?.toUpperCase() || "";
+  const admin = useSelector((state) => state.auth.admin);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -88,16 +91,30 @@ const Navbar = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
+  };  
 
   return (
-    <nav className="bg-gray-800 p-4 text-white">
+    <nav className="bg-neutral-900 px-4 py-2 text-white display: fixed top-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-xl font-bold"></div>
         <div className="flex items-center">
           <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-            <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-            <Typography sx={{ minWidth: 100 }}>About</Typography>
+            {admin ? (
+              <>
+              <Typography sx={{ minWidth: 100 }}><Link href="/dashboard/admin/console">Console</Link></Typography>
+              <Typography sx={{ minWidth: 100 }}><Link href="/dashboard/admin/create">Create</Link></Typography>
+              </>
+            ) : (
+              <>
+              <Typography sx={{ minWidth: 100 }}><Link href="/dashboard/user#home">Home</Link></Typography>
+              <Typography sx={{ minWidth: 100 }}><Link href="/dashboard/user#gallery">Gallery</Link></Typography>
+              <Typography sx={{ minWidth: 100 }}><Link href="/dashboard/user#process">Process</Link></Typography>
+              <Typography sx={{ minWidth: 100 }}><Link href="/dashboard/user#faq">FAQ</Link></Typography>
+              <Typography sx={{ minWidth: 100 }}><Link href="/dashboard/user#contact-us">Contact</Link></Typography>
+            <Typography sx={{ minWidth: 100 }}><Link href="/dashboard/user#about-us">About</Link></Typography>
+              </>
+            )}
+            
             <Tooltip title="Account settings">
               <IconButton
                 onClick={handleClick}
