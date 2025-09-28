@@ -58,11 +58,6 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
     fetchAllImages();
   }, []);
 
-  // Debug effect to track state changes
-//   useEffect(() => {
-//     console.log("useEffect triggered - modalOpen:", modalOpen, "selectedImage:", selectedImage);
-//   }, [modalOpen, selectedImage]);
-
   // Handle search filtering
   useEffect(() => {
     if (searchTerm.trim() === "") {
@@ -80,8 +75,6 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
   };
 
   const handleImageClick = (img) => {
-    
-    // Try using functional state updates to ensure they execute
     setSelectedImage(() => {
       return img;
     });
@@ -110,7 +103,8 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
       sx={{ 
         minHeight: "100vh",
         background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)",
-        py: 6
+        pt: { xs: 10, sm: 12 }, // Add top padding to account for fixed navbar
+        pb: 6
       }}
     >
       <Container maxWidth="xl">
@@ -365,17 +359,6 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                       >
                         {img.title}
                       </Typography>
-                      {/* <Typography
-                        variant="body2"
-                        sx={{
-                          color: "grey.400",
-                          textAlign: "center",
-                          mt: 0.5,
-                          fontSize: "0.9rem"
-                        }}
-                      >
-                        Creative Design
-                      </Typography> */}
                     </Box>
                   </Card>
                 </Fade>

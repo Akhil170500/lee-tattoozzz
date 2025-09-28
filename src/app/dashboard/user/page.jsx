@@ -84,18 +84,22 @@ const HeroPage = () => {
             Individual style, limitless creativity: your story on the skin
           </Typography>
           <Button
-            variant="outlined"
-            sx={{
-              borderColor: "white",
-              color: "white",
-              px: 4,
-              py: 1,
-              fontSize: 16,
-              "&:hover": { bgcolor: "white", color: "black" },
-            }}
-          >
-            Make an Appointment
-          </Button>
+  variant="outlined"
+  sx={{
+    borderColor: "white",
+    color: "white",
+    px: { xs: 2, sm: 3, md: 4 }, // horizontal padding: smaller on mobile
+    py: { xs: 0.5, sm: 1, md: 1 }, // vertical padding
+    fontSize: { xs: 12, sm: 14, md: 16 }, // smaller font on mobile
+    "&:hover": {
+      bgcolor: "white",
+      color: "black",
+    },
+  }}
+>
+  Make an Appointment
+</Button>
+
         </Box>
 
         {/* Hero Image Right */}
@@ -108,7 +112,7 @@ const HeroPage = () => {
           }}
         >
           <img
-            src="/tattoo-hero.jpg" // put your hero image here
+            src="/images/hero.png" // put your hero image here
             alt="Tattoo Hero"
             style={{
               maxWidth: "90%",
@@ -220,7 +224,7 @@ const HeroPage = () => {
       {/* Row 1 */}
       {topImages[0] && (
         <div className="col-span-6 md:col-span-4 group relative overflow-hidden rounded-lg cursor-pointer aspect-[4/3]"
-             onClick={() => router.push(`/designs/${topImages[0].docId}`)}>
+             >
           <img src={topImages[0].url} alt={topImages[0].title} 
                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
@@ -231,7 +235,7 @@ const HeroPage = () => {
       
       {topImages[1] && (
         <div className="col-span-6 md:col-span-3 group relative overflow-hidden rounded-lg cursor-pointer aspect-square"
-             onClick={() => router.push(`/designs/${topImages[1].docId}`)}>
+             >
           <img src={topImages[1].url} alt={topImages[1].title} 
                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
@@ -242,7 +246,7 @@ const HeroPage = () => {
 
       {topImages[2] && (
         <div className="col-span-12 md:col-span-5 group relative overflow-hidden rounded-lg cursor-pointer aspect-[5/3]"
-             onClick={() => router.push(`/designs/${topImages[2].docId}`)}>
+             >
           <img src={topImages[2].url} alt={topImages[2].title} 
                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
@@ -254,7 +258,7 @@ const HeroPage = () => {
       {/* Row 2 */}
       {topImages[3] && (
         <div className="col-span-6 md:col-span-3 group relative overflow-hidden rounded-lg cursor-pointer aspect-[3/4]"
-             onClick={() => router.push(`/designs/${topImages[3].docId}`)}>
+             >
           <img src={topImages[3].url} alt={topImages[3].title} 
                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
@@ -265,7 +269,7 @@ const HeroPage = () => {
 
       {topImages[4] && (
         <div className="col-span-6 md:col-span-5 group relative overflow-hidden rounded-lg cursor-pointer aspect-[5/4]"
-             onClick={() => router.push(`/designs/${topImages[4].docId}`)}>
+             >
           <img src={topImages[4].url} alt={topImages[4].title} 
                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
@@ -276,7 +280,7 @@ const HeroPage = () => {
 
       {topImages[5] && (
         <div className="col-span-12 md:col-span-4 group relative overflow-hidden rounded-lg cursor-pointer aspect-square"
-             onClick={() => router.push(`/designs/${topImages[5].docId}`)}>
+             >
           <img src={topImages[5].url} alt={topImages[5].title} 
                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
@@ -288,7 +292,7 @@ const HeroPage = () => {
       {/* Row 3 */}
       {topImages[6] && (
         <div className="col-span-6 md:col-span-4 group relative overflow-hidden rounded-lg cursor-pointer aspect-[4/5]"
-             onClick={() => router.push(`/designs/${topImages[6].docId}`)}>
+             >
           <img src={topImages[6].url} alt={topImages[6].title} 
                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
@@ -299,7 +303,7 @@ const HeroPage = () => {
 
       {topImages[7] && (
         <div className="col-span-6 md:col-span-4 group relative overflow-hidden rounded-lg cursor-pointer aspect-[4/3]"
-             onClick={() => router.push(`/designs/${topImages[7].docId}`)}>
+             >
           <img src={topImages[7].url} alt={topImages[7].title} 
                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
