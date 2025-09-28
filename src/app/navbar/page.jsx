@@ -67,9 +67,9 @@ const Navbar = () => {
   // Show skeleton until hydrated
   if (!isHydrated) {
     return (
-      <nav className="bg-gray-800 p-4 text-white">
+      <nav className="bg-neutral-900 px-4 py-2 text-white fixed top-0 w-full z-50">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="w-24 h-8 bg-gray-600 rounded animate-pulse"></div>
+          <div className="w-24 h-8 rounded animate-pulse"></div>
         </div>
       </nav>
     );

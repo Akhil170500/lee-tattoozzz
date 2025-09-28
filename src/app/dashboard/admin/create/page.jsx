@@ -47,7 +47,7 @@ const DesignListScreen = () => {
   }, []);
 
   return (
-    <Box className="flex flex-col h-screen bg-black text-gray-200">
+    <Box className="flex flex-col h-screen bg-black text-gray-200 pt-15">
       {/* ---------- Header ---------- */}
       <Box className="flex justify-between items-center px-6 py-4 border-b border-gray-800 bg-black">
         <Typography variant="h5" fontWeight="bold" className="text-white">
