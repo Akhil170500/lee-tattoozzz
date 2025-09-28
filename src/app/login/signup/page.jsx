@@ -1,26 +1,27 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase.config";
+import { auth, db } from "../../../firebase.config";
 import Link from "next/link";
-import { db } from "../../../firebase.config";
 import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { Button, TextField } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import SaveIcon from "@mui/icons-material/Save";
+import {
+  Button,
+  TextField,
+  InputAdornment,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useDispatch } from "react-redux";
+import { login } from "@/redux/slices/authSlice";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -30,16 +31,14 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [localError, setLocalError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // Destructure hook
   const [createUserWithEmailAndPassword, userCredential, loading, hookError] =
     useCreateUserWithEmailAndPassword(auth);
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLocalError(null);
@@ -78,7 +77,7 @@ const SignUp = () => {
             email: user.email,
             name,
           },
-          isAdmin: false, // You can set true manually if needed
+          isAdmin: false,
         })
       );
 
@@ -90,7 +89,6 @@ const SignUp = () => {
       setGender("");
       setDob(null);
 
-      //  Navigate after Firestore write
       router.push("/dashboard/user");
     } catch (error) {
       console.error("Failed to save user to Firestore:", error);
@@ -99,20 +97,36 @@ const SignUp = () => {
 
   useEffect(() => {
     if (userCredential) {
-      const user = userCredential.user;
-      saveUserToFirestore(user);
+      saveUserToFirestore(userCredential.user);
     }
   }, [userCredential]);
 
+  // 🔥 Shared styles for inputs
+  const inputSx = {
+    "& .MuiInput-underline:before": { borderBottomColor: "white" },
+    "& .MuiInput-underline:hover:before": { borderBottomColor: "white" },
+    "& .MuiInput-underline:after": { borderBottomColor: "#ff4081" },
+    "& .MuiInputLabel-root": { color: "white" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#ff4081" },
+    input: { color: "white" },
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-black">
+    <div className="flex flex-col items-center justify-center h-screen bg-black">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col w-96 bg-gray-200 p-8 rounded shadow"
+        className="flex flex-col w-96 bg-neutral-900 p-8 rounded-2xl shadow-lg border border-neutral-800 text-white"
       >
+        <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-[#ff4081] to-[#ff4081]/70 bg-clip-text text-transparent">
+          Create Account
+        </h2>
+
         {(localError || hookError) && (
-          <p className="text-red-600 mb-4">{localError || hookError.message}</p>
+          <p className="text-[#ff4081] mb-4 text-sm text-center">
+            {localError || hookError.message}
+          </p>
         )}
+
         <TextField
           name="email"
           id="email"
@@ -120,34 +134,41 @@ const SignUp = () => {
           label="Email"
           variant="standard"
           value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
+          sx={{ ...inputSx, mb: 3 }}
         />
+
         <TextField
           name="name"
           id="name"
           type="text"
           value={name}
-          onChange={(event) => setName(event.target.value)}
+          onChange={(e) => setName(e.target.value)}
           label="First Name"
           variant="standard"
+          sx={{ ...inputSx, mb: 3 }}
         />
+
         <TextField
           name="lastname"
           id="lastname"
           type="text"
           value={lastname}
-          onChange={(event) => setLastName(event.target.value)}
+          onChange={(e) => setLastName(e.target.value)}
           label="Last Name"
           variant="standard"
+          sx={{ ...inputSx, mb: 3 }}
         />
+
         <TextField
           name="password"
           id="password"
           type={showPassword ? "text" : "password"}
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           label="Password"
           variant="standard"
+          sx={{ ...inputSx, mb: 3 }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -155,6 +176,7 @@ const SignUp = () => {
                   edge="end"
                   onClick={() => setShowPassword((prev) => !prev)}
                   aria-label="toggle password visibility"
+                  sx={{ color: "#fff" }}
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
@@ -163,14 +185,14 @@ const SignUp = () => {
           }}
         />
 
-        <FormControl variant="standard">
+        <FormControl variant="standard" sx={{ ...inputSx, mb: 3 }}>
           <InputLabel id="gender">Gender</InputLabel>
           <Select
             labelId="gender"
             id="gender"
             value={gender}
-            onChange={(event) => setGender(event.target.value)}
-            label="Gender"
+            onChange={(e) => setGender(e.target.value)}
+            sx={{ color: "white" }}
           >
             <MenuItem value="">
               <em>None</em>
@@ -182,29 +204,74 @@ const SignUp = () => {
         </FormControl>
 
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Date of Birth"
-            value={dob}
-            onChange={(dob) => setDob(dob)}
-            disableFuture
-            openTo="year"
-            views={["year", "month", "day"]}
-            slotProps={{
-              textField: {
-                variant: "standard",
-                fullWidth: true,
-              },
-            }}
-          />
-        </LocalizationProvider>
+  <DatePicker
+    label="Date of Birth"
+    value={dob}
+    onChange={(v) => setDob(v)}
+    disableFuture
+    openTo="year"
+    views={["year", "month", "day"]}
+    slotProps={{
+      textField: {
+        variant: "standard",
+        fullWidth: true,
+        sx: {
+          mb: 3,
 
-        <Button type="submit" className="!mt-4" fullWidth variant="contained">
-          {loading ? "Registering" : "Register"}
+          // 👇 target underline pseudo-elements strongly
+          "& .MuiInputBase-root:before": {
+            borderBottom: "1px solid !white !important",
+          },
+          "& .MuiInputBase-root:hover:not(.Mui-disabled):before": {
+            borderBottom: "1px solid !white !important",
+          },
+          "& .MuiInputBase-root:after": {
+            borderBottom: "2px solid #ff4081 !important",
+          },
+
+          // label
+          "& label": { color: "white" },
+          "& label.Mui-focused": { color: "#ff4081" },
+
+          // input text
+          "& input": { color: "white" },
+
+          // calendar icon
+          "& .MuiInputAdornment-root": { color: "white" },
+          "& .MuiIconButton-root": { color: "white" },
+          "& .MuiSvgIcon-root": { color: "white" },
+        },
+      },
+    }}
+  />
+</LocalizationProvider>
+
+
+        <Button
+          type="submit"
+          fullWidth
+          disabled={loading}
+          sx={{
+            background:
+              "linear-gradient(90deg, #ff4081 0%, #ff4081cc 100%)",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius: "12px",
+            textTransform: "none",
+            "&:hover": {
+              background:
+                "linear-gradient(90deg, #ff4081cc 0%, #ff4081 100%)",
+            },
+            py: 1.5,
+          }}
+        >
+          {loading ? "Registering..." : "Register"}
         </Button>
       </form>
-      <p className="text-sm mt-4 text-white">
+
+      <p className="text-sm mt-6 text-neutral-400">
         Already have an account?{" "}
-        <Link href="/login/signin" className="text-blue-500">
+        <Link href="/login/signin" className="text-[#ff4081] font-semibold">
           Sign In
         </Link>
       </p>

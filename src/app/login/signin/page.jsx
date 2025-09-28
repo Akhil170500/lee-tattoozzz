@@ -1,22 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase.config"; // adjust path
+import { auth, db } from "../../../firebase.config"; 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { db } from "../../../firebase.config";
-import { doc, setDoc } from "firebase/firestore";
-import { getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { Button, TextField } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import SaveIcon from "@mui/icons-material/Save";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/redux/slices/authSlice";
-import { useSelector } from "react-redux";
 
 const SignIn = () => {
   const router = useRouter();
@@ -46,149 +41,158 @@ const SignIn = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (userCredential) {
-  //     localStorage.setItem("userEmail", email);
-  //     router.push("/dashboard");
-  //   }
-  // }, [userCredential, router]);
-const admin = useSelector((state) => state.auth.admin); //  RIGHT
-const name = useSelector((state) => state.auth.user?.name || "");
+  const admin = useSelector((state) => state.auth.admin);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
-const handleUserLogin = async () => {
-  if (userCredential) {
-    const user = userCredential.user;
+  const handleUserLogin = async () => {
+    if (userCredential) {
+      const user = userCredential.user;
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+        const userSnapshot = await getDoc(userDocRef);
 
-    try {
-      const userDocRef = doc(db, "users", user.uid);
-      const userSnapshot = await getDoc(userDocRef);
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
 
-      if (userSnapshot.exists()) {
-        const userData = userSnapshot.data();
+          dispatch(
+            login({
+              user: {
+                uid: user.uid,
+                email: userData.email,
+                name: userData.name,
+              },
+              admin: userData.admin,
+            })
+          );
 
-dispatch(
-  login({
-    user: {
-      uid: user.uid,
-      email: userData.email,
-      name: userData.name,
-    },
-    admin: userData.admin, //  no need to compare if already boolean
-  })
-);
-
-        setEmail("");
-        setPassword("");
-      } else {
-        console.warn("No user profile found in Firestore");
+          setEmail("");
+          setPassword("");
+        } else {
+          console.warn("No user profile found in Firestore");
+        }
+      } catch (error) {
+        console.error("Error fetching user from Firestore:", error);
       }
-    } catch (error) {
-      console.error("Error fetching user from Firestore:", error);
     }
-  }
-};
+  };
 
-useEffect(() => {
-  if (userCredential) {
-    handleUserLogin();
-  }
-}, [userCredential]);
-
-const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
-useEffect(() => {
-  if (isLoggedIn) {
-    if (admin) {
-      router.push("/dashboard/admin");
-    } else {
-      router.push("/dashboard/user");
+  useEffect(() => {
+    if (userCredential) {
+      handleUserLogin();
     }
-  }
-}, [admin, isLoggedIn, router]);
+  }, [userCredential]);
 
-
+  useEffect(() => {
+    if (isLoggedIn) {
+      if (admin) {
+        router.push("/dashboard/admin");
+      } else {
+        router.push("/dashboard/user");
+      }
+    }
+  }, [admin, isLoggedIn, router]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen bg-black">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col w-96 bg-gray-200 text-black p-8 rounded shadow"
+        className="flex flex-col w-96 bg-neutral-900 text-white p-8 rounded-2xl shadow-lg border border-neutral-800"
       >
+        <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-[#ff4081] to-[#ff4081]/70 bg-clip-text text-transparent">
+          Welcome Back
+        </h2>
+
         {(localError || hookError) && (
-          <p className="text-red-600 mb-4">{localError || hookError.message}</p>
+          <p className="text-[#ff4081] mb-4 text-sm text-center">
+            {localError || hookError.message}
+          </p>
         )}
 
         <TextField
-          id="email"
-          type="email"
-          label="Email"
-          variant="standard"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          name="password"
-          id="password"
-          type={showPassword ? "text" : "password"}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          label="Password"
-          variant="standard"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  edge="end"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label="toggle password visibility"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+  id="email"
+  type="email"
+  label="Email"
+  variant="standard"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  InputLabelProps={{ style: { color: "#fff" } }}
+  InputProps={{ style: { color: "#fff" } }}
+  sx={{
+    marginBottom: 3,
+    "& .MuiInput-underline:before": {
+      borderBottomColor: "white", // default line color
+    },
+    "& .MuiInput-underline:hover:before": {
+      borderBottomColor: "white", // on hover
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "#ff4081", // on focus
+    },
+  }}
+/>
 
-        {/* <label className="mb-2" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="border-2 border-gray-300 p-2 mb-4 text-black"
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        /> */}
-
-        {/* <label className="mb-2" htmlFor="password">
-          Password
-        </label>
-        <input
-          className="border border-gray-300 p-2 mb-4"
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        /> */}
-
-        {/* <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-          type="submit"
-          disabled={loading}
+<TextField
+  id="password"
+  type={showPassword ? "text" : "password"}
+  label="Password"
+  variant="standard"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  InputLabelProps={{ style: { color: "#fff" } }}
+  InputProps={{
+    style: { color: "#fff" },
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          edge="end"
+          onClick={() => setShowPassword((prev) => !prev)}
+          aria-label="toggle password visibility"
+          sx={{ color: "#fff" }}
         >
-          Sign In
-        </button> */}
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+  sx={{
+    marginBottom: 4,
+    "& .MuiInput-underline:before": {
+      borderBottomColor: "white",
+    },
+    "& .MuiInput-underline:hover:before": {
+      borderBottomColor: "white",
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "#ff4081",
+    },
+  }}
+/>
 
-        <Button type="submit" className="!mt-4" fullWidth variant="contained">
-          Sign In
+
+        <Button
+          type="submit"
+          fullWidth
+          disabled={loading}
+          sx={{
+            background:
+              "linear-gradient(90deg, #ff4081 0%, #ff4081cc 100%)",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius: "12px",
+            textTransform: "none",
+            "&:hover": {
+              background: "linear-gradient(90deg, #ff4081cc 0%, #ff4081 100%)",
+            },
+            py: 1.5,
+          }}
+        >
+          {loading ? "Signing In..." : "Sign In"}
         </Button>
       </form>
 
-      <p className="text-sm mt-4">
+      <p className="text-sm mt-6 text-neutral-400">
         Don’t have an account?{" "}
-        <Link href="/login/signup" className="text-blue-500">
+        <Link href="/login/signup" className="text-[#ff4081] font-semibold">
           Sign Up
         </Link>
       </p>

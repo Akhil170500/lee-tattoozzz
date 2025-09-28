@@ -107,7 +107,7 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
         pb: 6
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" className="container">
         {/* Header Section */}
         <Box sx={{ textAlign: "center", mb: 6 }}>
           <Typography
@@ -367,230 +367,313 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
           </Fade>
         )}
 
-        {/* Professional Modal Popup */}
-        {modalOpen && selectedImage && (
-          <Box
-            sx={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100vw',
-              height: '100vh',
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-              zIndex: 9999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              p: 2,
-            }}
-            onClick={handleCloseModal}
-          >
-            <Box
-              sx={{
-                background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
-                borderRadius: 3,
-                width: '90vw',
-                maxWidth: '1200px',
-                maxHeight: '90vh',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: { xs: 'column', md: 'row' },
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
-                position: 'relative',
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <IconButton
-                onClick={handleCloseModal}
-                sx={{
-                  position: 'absolute',
-                  top: 16,
-                  right: 16,
-                  zIndex: 10,
-                  backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                  }
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
+{/* Clean Modal Popup */}
+{modalOpen && selectedImage && (
+  <Box
+    sx={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backgroundColor: 'rgba(0, 0, 0, 0.92)',
+      zIndex: 9999,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      p: 2,
+    }}
+    onClick={handleCloseModal}
+  >
+    <Box
+      sx={{
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
+        borderRadius: 3,
+        width: '95vw',
+        maxWidth: '1200px',
+        maxHeight: '90vh',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
+        position: 'relative',
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Close Button */}
+      <IconButton
+        onClick={handleCloseModal}
+        sx={{
+          position: 'absolute',
+          top: 16,
+          right: 16,
+          zIndex: 10,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          color: 'white',
+          '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          }
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
 
-              {/* Image Section */}
-              <Box
-                sx={{
-                  flex: 2,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  p: 4,
-                  minHeight: { xs: '50vh', md: '70vh' },
-                }}
-              >
-                <img
-                  src={selectedImage.url}
-                  alt={selectedImage.title}
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    objectFit: 'contain',
-                    borderRadius: '12px',
-                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+      {/* Image Section */}
+      <Box
+        sx={{
+          flex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 4,
+          minHeight: { xs: '50vh', md: '70vh' },
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        }}
+      >
+        <img
+          src={selectedImage.url}
+          alt={selectedImage.title}
+          style={{
+            maxWidth: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain',
+            borderRadius: '8px',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+          }}
+        />
+      </Box>
+
+      {/* Details Section */}
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: { md: '350px' },
+          maxWidth: { md: '400px' },
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          borderLeft: { md: '1px solid rgba(255, 255, 255, 0.1)' },
+          borderTop: { xs: '1px solid rgba(255, 255, 255, 0.1)', md: 'none' },
+        }}
+      >
+        {/* Header */}
+        <Box sx={{ p: 4, borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          <Typography
+            variant="h5"
+            sx={{
+              color: 'white',
+              fontWeight: 600,
+              mb: 2,
+              textTransform: 'capitalize',
+              lineHeight: 1.3,
+            }}
+          >
+            {selectedImage.title || 'Untitled Design'}
+          </Typography>
+          {selectedImage.description && (
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontSize: '0.9rem',
+              }}
+            >
+              {selectedImage.description}
+            </Typography>
+          )}
+        </Box>
+
+        {/* Details Content */}
+        <Box sx={{ p: 4, flex: 1 }}>
+          {/* Basic Information */}
+          <Box sx={{ mb: 4 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                fontWeight: 600,
+                mb: 2,
+                fontSize: '0.875rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}
+            >
+              Information
+            </Typography>
+
+            <Box sx={{ space: 2 }}>
+              {selectedImage.type && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                    Type
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
+                    {selectedImage.type}
+                  </Typography>
+                </Box>
+              )}
+
+              {selectedImage.body && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                    Body
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
+                    {selectedImage.body}
+                  </Typography>
+                </Box>
+              )}
+
+              {selectedImage.category && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                    Category
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
+                    {selectedImage.category}
+                  </Typography>
+                </Box>
+              )}
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                  Document ID
+                </Typography>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: 'rgba(255, 255, 255, 0.8)', 
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem',
                   }}
-                />
+                >
+                  {selectedImage.docId}
+                </Typography>
               </Box>
 
-              {/* Details Section */}
-              <Box
-                sx={{
-                  flex: 1,
-                  p: 4,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  minWidth: { md: '350px' },
-                  background: 'rgba(0, 0, 0, 0.3)',
-                }}
-              >
-                <Box>
-                  {/* Title */}
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      color: 'white',
-                      fontWeight: 'bold',
-                      mb: 3,
-                      textTransform: 'capitalize',
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {selectedImage.title}
-                  </Typography>
-
-                  {/* Tags */}
-                  <Box sx={{ mb: 3 }}>
-                    <Chip
-                      label="Creative Design"
-                      sx={{
-                        backgroundColor: 'rgba(33, 150, 243, 0.2)',
-                        color: '#2196F3',
-                        mr: 1,
-                        mb: 1,
-                      }}
-                    />
-                    <Chip
-                      label="Digital Art"
-                      sx={{
-                        backgroundColor: 'rgba(156, 39, 176, 0.2)',
-                        color: '#9C27B0',
-                        mr: 1,
-                        mb: 1,
-                      }}
-                    />
-                    <Chip
-                      label="Premium"
-                      sx={{
-                        backgroundColor: 'rgba(255, 193, 7, 0.2)',
-                        color: '#FFC107',
-                        mr: 1,
-                        mb: 1,
-                      }}
-                    />
-                  </Box>
-
-                  <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)', mb: 3 }} />
-
-                  {/* Description */}
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: 'grey.300',
-                      lineHeight: 1.6,
-                      mb: 3,
-                    }}
-                  >
-                    This stunning design showcases creative excellence and attention to detail. 
-                    Perfect for modern applications and creative projects that require high-quality visuals.
-                  </Typography>
-
-                  {/* Details */}
-                  <Box sx={{ mb: 3 }}>
-                    <Typography variant="body2" sx={{ color: 'grey.400', mb: 1 }}>
-                      <strong>Format:</strong> PNG
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'grey.400', mb: 1 }}>
-                      <strong>Category:</strong> {selectedImage.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'grey.400', mb: 1 }}>
-                      <strong>ID:</strong> {selectedImage.docId}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'grey.400' }}>
-                      <strong>Created:</strong> {new Date().toLocaleDateString()}
-                    </Typography>
-                  </Box>
-                </Box>
-
-                {/* Action Buttons */}
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                  <Box
-                    onClick={() => handleDownload(selectedImage.url, selectedImage.title)}
-                    sx={{
-                      flex: 1,
-                      minWidth: '120px',
-                      py: 2,
-                      px: 3,
-                      backgroundColor: '#2196F3',
-                      color: 'white',
-                      borderRadius: 2,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 1,
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        backgroundColor: '#1976D2',
-                        transform: 'translateY(-2px)',
-                      }
-                    }}
-                  >
-                    <DownloadIcon fontSize="small" />
-                    <Typography variant="body2" fontWeight="bold">
-                      Download
-                    </Typography>
-                  </Box>
-
-                  <IconButton
-                    sx={{
-                      backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                      color: '#F44336',
-                      '&:hover': {
-                        backgroundColor: 'rgba(244, 67, 54, 0.3)',
-                      }
-                    }}
-                  >
-                    <FavoriteIcon />
-                  </IconButton>
-
-                  <IconButton
-                    sx={{
-                      backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                      color: '#4CAF50',
-                      '&:hover': {
-                        backgroundColor: 'rgba(76, 175, 80, 0.3)',
-                      }
-                    }}
-                  >
-                    <ShareIcon />
-                  </IconButton>
-                </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                  Image ID
+                </Typography>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: 'rgba(255, 255, 255, 0.8)', 
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  {selectedImage.id}
+                </Typography>
               </Box>
             </Box>
           </Box>
-        )}
+
+          {/* Category Tags */}
+          {selectedImage.tags && selectedImage.tags.length > 0 && (
+            <Box sx={{ mb: 4 }}>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontWeight: 600,
+                  mb: 2,
+                  fontSize: '0.875rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                Tags
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {selectedImage.tags.map((tag, index) => (
+                  <Chip
+                    key={index}
+                    label={tag}
+                    size="small"
+                    sx={{
+                      backgroundColor: index % 2 === 0 ? 'rgba(33, 150, 243, 0.2)' : 'rgba(156, 39, 176, 0.2)',
+                      color: index % 2 === 0 ? '#2196F3' : '#9C27B0',
+                      border: `1px solid ${index % 2 === 0 ? 'rgba(33, 150, 243, 0.3)' : 'rgba(156, 39, 176, 0.3)'}`,
+                      fontSize: '0.75rem',
+                    }}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
+
+          {/* Description */}
+          {selectedImage.longDescription && (
+            <Box>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontWeight: 600,
+                  mb: 2,
+                  fontSize: '0.875rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                Description
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  lineHeight: 1.6,
+                  fontSize: '0.875rem',
+                }}
+              >
+                {selectedImage.longDescription}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+
+        {/* Footer Action */}
+        {/* <Box 
+          sx={{ 
+            p: 4, 
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          <Box
+            onClick={() => handleDownload(selectedImage.url, selectedImage.title)}
+            sx={{
+              width: '100%',
+              py: 2.5,
+              backgroundColor: '#2196F3',
+              color: 'white',
+              borderRadius: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 1.5,
+              cursor: 'pointer',
+              fontWeight: 600,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: '#1976D2',
+                transform: 'translateY(-2px)',
+                boxShadow: '0 8px 25px rgba(33, 150, 243, 0.3)',
+              }
+            }}
+          >
+            <DownloadIcon sx={{ fontSize: 20 }} />
+            <Typography variant="body2" fontWeight="600">
+              Download Image
+            </Typography>
+          </Box>
+        </Box> */}
+      </Box>
+    </Box>
+  </Box>
+)}
 
         {/* Original single card section (if needed) */}
         {(image || title) && (
