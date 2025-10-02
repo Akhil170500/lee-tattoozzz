@@ -178,8 +178,8 @@ const HeroPage = () => {
             <p className="text-sm md:text-base text-gray-700 mb-4 leading-relaxed">
               From a single artist's dream to a trusted studio, we focus on
               unique designs, precision, and client satisfaction. Each tattoo
-              tells a story, and we ensure yours is unforgettable. Our team of
-              skilled artists brings years of experience and diverse artistic
+              tells a story, and we ensure yours is unforgettable.
+              Skilled artists brings years of experience and diverse artistic
               backgrounds to create pieces that truly reflect your personality
               and vision.
             </p>
@@ -213,23 +213,30 @@ const HeroPage = () => {
           <div className="w-full sm:w-1/2 sm:flex-1 order-2">
             <div className="flex flex-col gap-4 h-full">
               {/* Big Image */}
-              <img
-                src="/studio.jpg"
-                alt="Tattoo Studio"
+              <div className="flex gap-2">
+                <img
+                src="/images/demo.jpg"
                 className="w-full h-48 sm:h-56 md:h-72 object-cover rounded-lg shadow-lg"
               />
+              <img
+                  src="/images/studio.jfif"
+                  className="flex-1 h-48 sm:h-56 md:h-72 object-cover rounded-lg shadow-md"
+                />
+              </div>
 
               {/* Two Small Images */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <img
-                  src="/artist-working.jpg"
-                  alt="Tattoo Artist"
-                  className="flex-1 h-32 sm:h-32 md:h-36 object-cover rounded-lg shadow-md"
+                  src="/images/ink.jfif"
+                  className="flex-1 h-60 object-cover rounded-lg shadow-md"
                 />
                 <img
-                  src="/tattoo-client.jpg"
-                  alt="Tattoo on Client"
-                  className="flex-1 h-32 sm:h-32 md:h-36 object-cover rounded-lg shadow-md"
+                  src="/images/artist.jfif"
+                  className="flex-1 h-60 object-cover rounded-lg shadow-md"
+                />
+                <img
+                  src="/images/inks.jfif"
+                  className="flex-1 h-60 object-cover rounded-lg shadow-md"
                 />
               </div>
             </div>
@@ -443,8 +450,7 @@ const HeroPage = () => {
               <p className="text-gray-300 leading-relaxed">
                 Tattoo pricing varies based on size, complexity, placement, and
                 time required. We offer free consultations to provide accurate
-                quotes. Small tattoos start from $100, while larger pieces are
-                quoted hourly at $150-200/hour.
+                quotes. Usually tattoos start from 400 rupees per inch.
               </p>
             </div>
 
@@ -468,7 +474,7 @@ const HeroPage = () => {
               </h3>
               <p className="text-gray-300 leading-relaxed">
                 Absolutely! We encourage clients to bring their ideas, reference
-                images, or custom designs. Our artists will work with you to
+                images, or custom designs. We will work with you to
                 refine and adapt your design to work perfectly as a tattoo on
                 your chosen placement.
               </p>
@@ -482,7 +488,7 @@ const HeroPage = () => {
               <p className="text-gray-300 leading-relaxed">
                 Get a good night's sleep, eat a proper meal, stay hydrated,
                 avoid alcohol for 24 hours, and wear comfortable clothing that
-                provides easy access to the tattoo area. Bring a valid ID and
+                provides easy access to the tattoo area and
                 arrive on time.
               </p>
             </div>
@@ -493,7 +499,7 @@ const HeroPage = () => {
                 Do you offer touch-ups?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                Yes, we provide free touch-ups within the first 6 months if
+                Yes, we provide free touch-ups within the first month if
                 needed (provided proper aftercare was followed). We stand behind
                 our work and want you to be completely satisfied with your
                 tattoo.
@@ -506,10 +512,9 @@ const HeroPage = () => {
                 How do I book an appointment?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                You can book through our website, call us directly, or visit our
+                You can book an appointment by clicking on <Link href="">Book an appointment</Link>, call us directly, or visit our
                 studio. We recommend scheduling consultations 1-2 weeks in
-                advance, and tattoo sessions may require 2-4 weeks notice
-                depending on complexity.
+                advance.
               </p>
             </div>
           </div>

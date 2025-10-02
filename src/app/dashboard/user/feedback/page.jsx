@@ -96,13 +96,13 @@ const Feedback = () => {
   return (
     <div className="px-6 md:px-20 py-12 md:py-20 bg-gray-50" id="feedback">
 
-                <div className="px-6 md:px-12 gap-10">
+                <div className="">
             <h2 className="text-2xl md:text-3xl text-black font-bold font-serif mb-2">
               05 Customer Reviews
             </h2>
             <div className="w-16 h-0.5 bg-black"></div>
           </div>
-<div className="flex flex-col md:flex-row min-h-screen bg-gray-50 p-6 md:p-12 gap-10">
+<div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
         {/* Feedback Form */}
       <form
         onSubmit={handleSubmit}
