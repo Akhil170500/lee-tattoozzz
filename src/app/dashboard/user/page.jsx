@@ -6,6 +6,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { Box, Typography, Button, Grid } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Feedback from "./feedback/page";
+import Process from "./process/page";
 
 const CLOUDINARY_BASE_URL =
   "https://res.cloudinary.com/dbqg53ryr/image/upload/";
@@ -152,7 +154,7 @@ const HeroPage = () => {
 
       {/* ABOUT US SECTION */}
       <div
-        className="px-6 md:px-20 py-12 md:py-20 bg-white text-black"
+        className="px-6 md:px-20 py-12 md:py-20 bg-gray-50 text-black"
         id="about-us"
       >
         <div className="flex flex-wrap items-start gap-12">
@@ -410,120 +412,7 @@ const HeroPage = () => {
       </div>
 
       {/* STAGES OF WORK SECTION */}
-      <div className="px-6 md:px-20 py-12 md:py-20 bg-gray-50" id="process">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="my-12">
-            <h2 className="text-2xl md:text-3xl text-black font-bold font-serif mb-2">
-              03 STAGES OF WORK
-            </h2>
-            <div className="w-16 h-0.5 bg-black"></div>
-          </div>
-
-          {/* Stages Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {/* Stage 1: Consultation */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="font-bold text-lg mb-3 text-black">
-                Consultation
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Communication with the client, clarifying all the details and
-                desires regarding the tattoo, discussing the design, placement,
-                size and other important details.
-              </p>
-            </div>
-
-            {/* Stage 2: Preparation */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="font-bold text-lg mb-3 text-black">
-                Preparation of the application site
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Preparation of the skin surface on which the tattoo will be
-                applied using special disinfectants.
-              </p>
-            </div>
-
-            {/* Stage 3: Template Check */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="font-bold text-lg mb-3 text-black">
-                Template check
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                If necessary, the tattoo artist makes a template and applies it
-                on the client's skin to optimize the location.
-              </p>
-            </div>
-
-            {/* Stage 4: Applying Tattoo */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="font-bold text-lg mb-3 text-black">
-                Applying a tattoo
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Using a special tattoo device, the tattoo artist applies the
-                tattoo on the client's skin.
-              </p>
-            </div>
-
-            {/* Stage 5: Completion */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="font-bold text-lg mb-3 text-black">
-                Completion of the process
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                After the tattoo is finished, the artist disinfects the surface
-                of the skin, applies protective film, and explains care
-                instructions so as to care for the new tattoo.
-              </p>
-            </div>
-
-            {/* Stage 6: Control Check */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="font-bold text-lg mb-3 text-black">
-                Control check
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                After a certain time during the healing period, the artist can
-                result, correct any flaws or cosmology, if necessary.
-              </p>
-            </div>
-          </div>
-
-          {/* Reviews Section */}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 pt-8 border-t border-gray-300">
-            {/* Left: Reviews Badge */}
-            <div className="flex items-center gap-4">
-              <div className="bg-black text-white px-6 py-3 rounded-full">
-                <span className="font-bold text-lg">96 REVIEWS</span>
-              </div>
-            </div>
-
-            {/* Right: Artist Info */}
-            <div className="flex items-center gap-4 lg:flex-row-reverse">
-              <div className="text-right lg:text-left">
-                <p className="font-bold text-lg text-black">
-                  Alexander Mitchell
-                </p>
-                <p className="text-gray-600 text-sm leading-relaxed max-w-md">
-                  Creative tattoo studio owner and tattoo artist. Has been
-                  providing unique tattoos to clients for more than 10 years.
-                  Professional and can handle almost all styles and
-                  requirements, will discuss and educate your ideas.
-                </p>
-              </div>
-              <div className="w-16 h-16 bg-gray-300 rounded-full flex-shrink-0 overflow-hidden">
-                <img
-                  src="/artist-profile.jpg"
-                  alt="Alexander Mitchell"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<Process/>
 
       {/* FREQUENTLY ASKED QUESTIONS SECTION */}
       <div
@@ -645,6 +534,11 @@ const HeroPage = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* feedback */}
+      <div>
+        <Feedback/>
       </div>
     </Box>
   );

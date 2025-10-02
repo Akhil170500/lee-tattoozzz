@@ -20,7 +20,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const CreateForm = ({ onClose }) => {
+const CreateForm = ({ onClose, fetchDesigns }) => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -91,6 +91,7 @@ const CreateForm = ({ onClose }) => {
       setHeight("");
       setBodyPart("");
       setFiles([]);
+      await fetchDesigns();
 
       if (onClose) onClose(); // close popup after save
     } catch (err) {

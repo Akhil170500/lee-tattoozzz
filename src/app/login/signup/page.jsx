@@ -219,12 +219,24 @@ const SignUp = () => {
       filter: "invert(1)",
       cursor: "pointer",
     },
-    // Remove placeholder text for date input
-    "& input[type='date']:invalid": {
+    // Completely hide the placeholder text
+    "& input[type='date']::-webkit-datetime-edit": {
       color: "transparent",
     },
-    "& input[type='date']:focus:invalid": {
+    "& input[type='date']:focus::-webkit-datetime-edit": {
       color: "white",
+    },
+    "& input[type='date']::-webkit-datetime-edit-text": {
+      color: "transparent",
+    },
+    "& input[type='date']::-webkit-datetime-edit-month-field": {
+      color: "transparent",
+    },
+    "& input[type='date']::-webkit-datetime-edit-day-field": {
+      color: "transparent",
+    },
+    "& input[type='date']::-webkit-datetime-edit-year-field": {
+      color: "transparent",
     },
   }}
   InputLabelProps={{

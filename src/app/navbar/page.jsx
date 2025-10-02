@@ -223,22 +223,22 @@ const Navbar = () => {
           <MenuItem onClick={handleClose}>
             <Avatar /> Profile
           </MenuItem>
-          <MenuItem onClick={handleClose}>
+          {/* <MenuItem onClick={handleClose}>
             <Avatar /> My account
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={handleClose}>
+          </MenuItem> */}
+          {/* <Divider /> */}
+          {/* <MenuItem onClick={handleClose}>
             <ListItemIcon>
               <PersonAdd fontSize="small" />
             </ListItemIcon>
             Add another account
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
+          </MenuItem> */}
+          {/* <MenuItem onClick={handleClose}>
             <ListItemIcon>
               <Settings fontSize="small" />
             </ListItemIcon>
             Settings
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem
             onClick={(e) => {
               e.stopPropagation();
