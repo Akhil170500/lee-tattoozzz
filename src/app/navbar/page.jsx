@@ -118,7 +118,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-neutral-900 px-4 py-2 text-white fixed top-0 w-full z-50">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="text-xl font-bold">
   <img

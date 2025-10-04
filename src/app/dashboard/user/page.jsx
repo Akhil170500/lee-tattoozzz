@@ -213,7 +213,7 @@ const HeroPage = () => {
           <div className="w-full sm:w-1/2 sm:flex-1 order-2">
             <div className="flex flex-col gap-4 h-full">
               {/* Big Image */}
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <img
                 src="/images/demo.jpg"
                 className="w-full h-48 sm:h-56 md:h-72 object-cover rounded-lg shadow-lg"
