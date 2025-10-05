@@ -125,9 +125,9 @@ const Navbar = () => {
     src="/images/logo.png"
     alt="Tattoo Logo"
     style={{
-      width: "110px",   // set your desired width
-      height: "35px",   // set your desired height
-      objectFit: "contain", // makes sure logo doesn’t stretch
+      width: "35px",
+      height: "35px",
+      objectFit: "contain",
     }}
   />
 </div>
@@ -223,22 +223,6 @@ const Navbar = () => {
           <MenuItem onClick={handleClose}>
             <Avatar /> Profile
           </MenuItem>
-          {/* <MenuItem onClick={handleClose}>
-            <Avatar /> My account
-          </MenuItem> */}
-          {/* <Divider /> */}
-          {/* <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <PersonAdd fontSize="small" />
-            </ListItemIcon>
-            Add another account
-          </MenuItem> */}
-          {/* <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <Settings fontSize="small" />
-            </ListItemIcon>
-            Settings
-          </MenuItem> */}
           <MenuItem
             onClick={(e) => {
               e.stopPropagation();

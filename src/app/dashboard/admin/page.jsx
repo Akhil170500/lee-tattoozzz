@@ -17,7 +17,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="flex items-center gap-4 bg-gray-600 p-4">
+      <div className="flex items-center display-hiden">
         <h6>{name}</h6>
         <ToggleButtonGroup
           color="primary"

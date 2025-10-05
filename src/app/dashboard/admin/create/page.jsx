@@ -15,6 +15,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import CreateForm from "./createForm/createForm";
+import CreateCharts from "./CreateCharts/page";
+import CreateDropdown from "./CreateDropdown/BodyPart/page";
+import CreateCatDropdown from "./CreateDropdown/Categories/page";
+
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+
+
+
 
 const CLOUDINARY_BASE_URL =
   "https://res.cloudinary.com/dbqg53ryr/image/upload/";
@@ -23,6 +32,8 @@ const DesignListScreen = () => {
   const [designs, setDesigns] = useState([]);
   const [selectedDesign, setSelectedDesign] = useState(null);
   const [open, setOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [openCatDropdown, setOpenCatDropdown] = useState(false);
 
   // state for selection
   const [selectionMode, setSelectionMode] = useState(false);
@@ -33,6 +44,14 @@ const DesignListScreen = () => {
   const [showSidebar, setShowSidebar] = useState(false);
 
   const handleClose = () => setOpen(false);
+  const handleCloseDdropdown = () => setOpenDropdown(false);
+  const handleCloseCatDdropdown = () => setOpenCatDropdown(false);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+const openMenu = Boolean(anchorEl);
+
+const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+const handleMenuClose = () => setAnchorEl(null);
 
   // Fetch all designs from Firestore
       const fetchDesigns = async () => {
@@ -47,7 +66,6 @@ const DesignListScreen = () => {
 
         setDesigns(result);
         if (result.length > 0) setSelectedDesign(result[0]); // default selection
-        console.log("dddddddddd", result);
       } catch (err) {
         console.error("Error fetching designs:", err);
       }
@@ -77,10 +95,10 @@ const DesignListScreen = () => {
       setSelectedIds([]);
       setSelectionMode(false);
       setConfirmOpen(false);
-      console.log("✅ Deleted successfully");
+      console.log("Deleted successfully");
       fetchDesigns();
     } catch (err) {
-      console.error("❌ Error deleting designs:", err);
+      console.error("Error deleting designs:", err);
     }
   };
 
@@ -141,23 +159,64 @@ const DesignListScreen = () => {
             {selectionMode ? "Confirm Delete" : "Delete"}
           </Button>
 
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#111111",
-              color: "#f5f5f5",
-              border: "1px solid #333",
-              textTransform: "none",
-              minWidth: { xs: "auto", sm: "64px" },
-              padding: { xs: "6px 12px", sm: "6px 16px" },
-              fontSize: { xs: "0.8rem", sm: "0.875rem" },
-              "&:hover": { backgroundColor: "#1a1a1a" },
-            }}
-            onClick={() => setOpen(true)}
-          >
-            <span className="hidden sm:inline">+ New</span>
-            <span className="sm:hidden">+</span>
-          </Button>
+          {/* Hamburger Dropdown Menu */}
+<Button
+  variant="contained"
+  sx={{
+    backgroundColor: "#111111",
+    color: "#f5f5f5",
+    border: "1px solid #333",
+    textTransform: "none",
+    minWidth: { xs: "auto", sm: "64px" },
+    padding: { xs: "6px 12px", sm: "6px 16px" },
+    fontSize: { xs: "0.8rem", sm: "0.875rem" },
+    "&:hover": { backgroundColor: "#1a1a1a" },
+  }}
+  onClick={handleMenuOpen}
+>
+  <MenuIcon />
+</Button>
+
+<Menu
+  anchorEl={anchorEl}
+  open={openMenu}
+  onClose={handleMenuClose}
+  PaperProps={{
+    sx: {
+      backgroundColor: "#111111",
+      color: "#f5f5f5",
+      border: "1px solid #333",
+      mt: 1,
+      "& .MuiMenuItem-root:hover": { backgroundColor: "#1a1a1a" },
+    },
+  }}
+>
+  <MenuItem
+    onClick={() => {
+      handleMenuClose();
+      setOpen(true);
+    }}
+  >
+    Create New Design
+  </MenuItem>
+  <MenuItem
+    onClick={() => {
+      handleMenuClose();
+      setOpenDropdown(true);
+    }}
+  >
+    Create Body Part
+  </MenuItem>
+  <MenuItem
+    onClick={() => {
+      handleMenuClose();
+      setOpenCatDropdown(true);
+    }}
+  >
+    Create Category
+  </MenuItem>
+</Menu>
+
         </div>
       </Box>
 
@@ -312,9 +371,36 @@ const DesignListScreen = () => {
           </Box>
         </Dialog>
 
-        {/* RIGHT - Details */}
+{/* RIGHT - Details */}
         <Box
-          className="flex-1 p-4 md:p-6 overflow-y-auto bg-black flex flex-col gap-4 md:gap-6"
+          className="flex-1 overflow-y-auto bg-black flex flex-col"
+          sx={{
+            marginLeft: { xs: 0, lg: 0 },
+            width: { xs: "100%", lg: "auto" },
+          }}
+        >
+          {selectedDesign ? (
+            <>
+              {/* Back button for mobile */}
+              {/* <Button
+                startIcon={<ChevronLeftIcon />}
+                onClick={() => setShowSidebar(true)}
+                sx={{
+                  display: { xs: "flex", lg: "none" },
+                  color: "#9ca3af",
+                  justifyContent: "flex-start",
+                  textTransform: "none",
+                  marginBottom: 2,
+                  "&:hover": { color: "#fff", backgroundColor: "transparent" },
+                }}
+              >
+                View list
+              </Button> */}
+
+              {/* ---------- Top Card - Image and Details ---------- */}
+{/* RIGHT - Details */}
+        <Box
+          className="flex-1 p-4 md:p-6 overflow-y-auto bg-black flex flex-col "
           sx={{
             marginLeft: { xs: 0, lg: 0 },
             width: { xs: "100%", lg: "auto" },
@@ -338,26 +424,23 @@ const DesignListScreen = () => {
                 View list
               </Button>
 
-              {/* ---------- Top Compact Card ---------- */}
-              <Box className="bg-neutral-900 rounded-xl shadow border border-gray-800 p-3 md:p-4 flex flex-col md:flex-row gap-4">
-                {/* Left: Hero Image */}
-                <Box
-                  className="flex-shrink-0 w-full md:w-1/2"
-                  sx={{ maxWidth: { xs: "100%", md: "50%" } }}
-                >
+              {/* ---------- Top Card - Image and Details ---------- */}
+              <Box className="bg-neutral-900 rounded-xl shadow border border-gray-800 p-3 md:p-4 flex flex-col md:flex-row gap-4 gap-4 w-full">
+                {/* Hero Image - Full Width */}
+                <Box className="w-full">
                   <img
                     src={`${CLOUDINARY_BASE_URL}${selectedDesign.imageFiles?.[0]}.png`}
                     alt={selectedDesign.title}
-                    className="w-full rounded-lg border border-gray-700 shadow object-cover"
+                    className="w-full rounded-lg border border-gray-700 shadow object-contain"
                     style={{
-                      height: "250px",
-                      maxHeight: "300px",
+                      maxHeight: "400px",
+                      backgroundColor: "#1a1a1a",
                     }}
                   />
                 </Box>
 
-                {/* Right: Info */}
-                <Box className="flex flex-col justify-start w-full md:w-1/2 gap-2 md:gap-3">
+                {/* Info Section - Below Image */}
+                <Box className="w-full rounded-lg border border-gray-700 p-4">
                   <Typography
                     variant="h5"
                     className="text-white font-bold"
@@ -375,9 +458,8 @@ const DesignListScreen = () => {
 
                   <Typography
                     variant="body2"
-                    className="text-gray-400 leading-relaxed overflow-y-auto"
+                    className="text-gray-400 leading-relaxed"
                     sx={{
-                      maxHeight: { xs: "80px", md: "120px" },
                       fontSize: { xs: "0.875rem", md: "0.875rem" },
                     }}
                   >
@@ -385,7 +467,7 @@ const DesignListScreen = () => {
                   </Typography>
 
                   {/* Details Grid */}
-                  <Box className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mt-2 text-gray-300">
+                  <Box className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 text-gray-300">
                     <Box>
                       <Typography
                         className="text-gray-500"
@@ -433,16 +515,16 @@ const DesignListScreen = () => {
               </Box>
 
               {/* ---------- Bottom Card for Charts ---------- */}
-              <Box className="bg-neutral-900 rounded-xl shadow border border-gray-800 p-3 md:p-4">
-                <Box className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Box className="bg-black rounded-lg border border-gray-700 h-48 md:h-64 flex items-center justify-center text-gray-500">
-                    Chart 1
-                  </Box>
-                  <Box className="bg-black rounded-lg border border-gray-700 h-48 md:h-64 flex items-center justify-center text-gray-500">
-                    Chart 2
-                  </Box>
-                </Box>
+              <Box className="bg-neutral-900 rounded-xl shadow border border-gray-800 p-3 md:p-4 w-full">
+                <CreateCharts/>
               </Box>
+            </>
+          ) : (
+            <Typography className="text-gray-500 mt-20 text-center">
+              Select a design to view details
+            </Typography>
+          )}
+        </Box>
             </>
           ) : (
             <Typography className="text-gray-500 mt-20 text-center">
@@ -485,6 +567,78 @@ const DesignListScreen = () => {
         </DialogTitle>
         <DialogContent dividers sx={{ borderColor: "#1f1f1f" }}>
           <CreateForm onClose={handleClose} fetchDesigns={fetchDesigns}/>
+        </DialogContent>
+      </Dialog>
+
+      {/* ---------- Create Body Part Popup ---------- */}
+      <Dialog
+        open={openDropdown}
+        onClose={handleClose}
+        fullWidth
+        maxWidth="md"
+        PaperProps={{
+          sx: {
+            backgroundColor: "#0d0d0d",
+            color: "#f3f4f6",
+            border: "1px solid #222",
+            margin: { xs: "16px", sm: "32px" },
+            maxHeight: { xs: "90vh", sm: "85vh" },
+          },
+        }}
+      >
+        <DialogTitle sx={{ m: 0, p: 2, color: "#e5e7eb" }}>
+          Add New Body Part
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseDdropdown}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: "#9ca3af",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ borderColor: "#1f1f1f" }}>
+          <CreateDropdown onClose={handleCloseDdropdown} fetchDesigns={fetchDesigns}/>
+        </DialogContent>
+      </Dialog>
+
+      {/* ---------- Create Category Popup ---------- */}
+      <Dialog
+        open={openCatDropdown}
+        onClose={handleClose}
+        fullWidth
+        maxWidth="md"
+        PaperProps={{
+          sx: {
+            backgroundColor: "#0d0d0d",
+            color: "#f3f4f6",
+            border: "1px solid #222",
+            margin: { xs: "16px", sm: "32px" },
+            maxHeight: { xs: "90vh", sm: "85vh" },
+          },
+        }}
+      >
+        <DialogTitle sx={{ m: 0, p: 2, color: "#e5e7eb" }}>
+          Add New Category
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseCatDdropdown}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: "#9ca3af",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ borderColor: "#1f1f1f" }}>
+          <CreateCatDropdown onClose={handleCloseCatDdropdown} fetchDesigns={fetchDesigns}/>
         </DialogContent>
       </Dialog>
     </Box>

@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "../../../../../firebase.config";
-import { addDoc, collection, setDoc } from "firebase/firestore";
+import { addDoc, collection, setDoc, getDocs } from "firebase/firestore";
 import {
   Button,
   TextField,
@@ -30,6 +30,9 @@ const CreateForm = ({ onClose, fetchDesigns }) => {
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [bodyPart, setBodyPart] = useState("");
+
+  const [bodyTypeData, setBodyTypeData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
 
   const handleFileSelect = (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -101,6 +104,26 @@ const CreateForm = ({ onClose, fetchDesigns }) => {
       setLoading(false);
     }
   };
+
+  const getDropdownData = async () => {
+    const bodyTypeRef = collection(db, "bodyPart");
+    const categoryRef = collection(db, "categories");
+    const bodyType = await getDocs(bodyTypeRef);
+    const category = await getDocs(categoryRef);
+    const bodyTypeData = bodyType.docs.map((doc) => doc.data());
+    const categoryData = category.docs.map((doc) => doc.data());
+
+    setBodyTypeData(bodyTypeData);
+    setCategoryData(categoryData);
+
+    console.log("bbbbbbbbbbb", bodyTypeData);
+    console.log("ccccccccccc", categoryData);
+    
+  };
+
+  useEffect(() => {
+    getDropdownData();
+  }, []);
 
   return (
     <Card 
@@ -235,9 +258,9 @@ const CreateForm = ({ onClose, fetchDesigns }) => {
                 <MenuItem value="">
                   <em>Select Category</em>
                 </MenuItem>
-                <MenuItem value="B">Band</MenuItem>
-                <MenuItem value="P">Portrait</MenuItem>
-                <MenuItem value="T">Text</MenuItem>
+                {categoryData.map((item) => (
+                  <MenuItem key={item.description} value={item.title}>{item.description}</MenuItem>
+                ))}
               </Select>
             </FormControl>
 
@@ -295,9 +318,9 @@ const CreateForm = ({ onClose, fetchDesigns }) => {
                 <MenuItem value="">
                   <em>Select Body Part</em>
                 </MenuItem>
-                <MenuItem value="Arm">Arm</MenuItem>
-                <MenuItem value="Chest">Chest</MenuItem>
-                <MenuItem value="Back">Back</MenuItem>
+                {bodyTypeData.map((item) => (
+                  <MenuItem key={item.description} value={item.title}>{item.description}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>

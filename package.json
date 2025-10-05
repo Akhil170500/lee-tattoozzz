@@ -20,6 +20,8 @@
     "@react-firebase/auth": "^0.2.10",
     "@reduxjs/toolkit": "^2.9.0",
     "date-fns": "^4.1.0",
+    "echarts": "^5.6.0",
+    "echarts-for-react": "^3.0.2",
     "firebase": "^12.3.0",
     "formik": "^2.4.6",
     "imagekit-javascript": "^4.0.1",
