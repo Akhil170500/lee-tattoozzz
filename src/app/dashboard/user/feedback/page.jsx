@@ -96,7 +96,7 @@ const Feedback = () => {
   return (
     <div className="px-6 md:px-20 py-12 md:py-20 bg-gray-50" id="feedback">
 
-                <div className="">
+                <div className="my-12">
             <h2 className="text-2xl md:text-3xl text-black font-bold font-serif mb-2">
               05 Customer Reviews
             </h2>

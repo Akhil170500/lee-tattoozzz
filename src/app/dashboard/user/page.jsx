@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Feedback from "./feedback/page";
 import Process from "./process/page";
+import Contact from "./contact/page";
 
 const CLOUDINARY_BASE_URL =
   "https://res.cloudinary.com/dbqg53ryr/image/upload/";
@@ -194,34 +195,34 @@ const HeroPage = () => {
             </p>
 
             {/* <p className="text-sm md:text-base text-gray-700 mb-4 leading-relaxed">
-        Whether it's your first tattoo or another addition to your journey,{" "}
-        <strong>Lee Tattoos</strong> delivers creativity, safety, and artistry.
-        We believe in building lasting relationships with our clients, taking the time
-        to understand your ideas and bringing them to life with meticulous attention to detail.
-      </p>
+              Whether it's your first tattoo or another addition to your journey,{" "}
+              <strong>Lee Tattoos</strong> delivers creativity, safety, and artistry.
+              We believe in building lasting relationships with our clients, taking the time
+              to understand your ideas and bringing them to life with meticulous attention to detail.
+            </p>
 
-      <p className="text-sm md:text-base text-gray-700 leading-relaxed">
-        Our consultation process ensures every design is perfectly tailored to your
-        preferences, body placement, and lifestyle. We're not just creating tattoos;
-        we're crafting memories, celebrating milestones, and helping you express your
-        unique story through the timeless art of tattooing. Visit us today and discover
-        why <strong>Lee Tattoos</strong> is where art meets skin in perfect harmony.
-      </p> */}
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+              Our consultation process ensures every design is perfectly tailored to your
+              preferences, body placement, and lifestyle. We're not just creating tattoos;
+              we're crafting memories, celebrating milestones, and helping you express your
+              unique story through the timeless art of tattooing. Visit us today and discover
+              why <strong>Lee Tattoos</strong> is where art meets skin in perfect harmony.
+            </p> */}
           </div>
 
           {/* Right Column: Images */}
-          <div className="w-full sm:w-1/2 sm:flex-1 order-2">
-            <div className="flex flex-col gap-4 h-full">
+          {/* <div className="w-full sm:w-1/2 sm:flex-1 order-2"> */}
+            <div className="w-full sm:w-1/2 sm:flex-1 order-2 flex flex-col flex wrap gap-4 h-full">
               {/* Big Image */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col flex-wrap sm:flex-row gap-4">
                 <img
-                src="/images/demo.jpg"
-                className="w-full h-48 sm:h-56 md:h-72 object-cover rounded-lg shadow-lg"
-              />
-              <img
-                  src="/images/studio.jfif"
-                  className="flex-1 h-48 sm:h-56 md:h-72 object-cover rounded-lg shadow-md"
+                  src="/images/demo.jpg"
+                  className="w-full h-48 sm:h-56 md:h-72 object-cover rounded-lg shadow-lg"
                 />
+                <img
+                    src="/images/studio.jfif"
+                    className="flex-1 h-48 sm:h-56 md:h-72 object-cover rounded-lg shadow-md"
+                  />
               </div>
 
               {/* Two Small Images */}
@@ -240,7 +241,7 @@ const HeroPage = () => {
                 />
               </div>
             </div>
-          </div>
+          {/* </div> */}
         </div>
       </div>
 
@@ -533,9 +534,12 @@ const HeroPage = () => {
               <button className="bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300">
                 Schedule Consultation
               </button>
+
+              <Link href="user/#contact">
               <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-black transition-colors duration-300">
                 Contact Us
               </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -545,6 +549,13 @@ const HeroPage = () => {
       <div>
         <Feedback/>
       </div>
+
+      {/* Contact */}
+      <div>
+        <Contact/>
+      </div>
+
+
     </Box>
   );
 };

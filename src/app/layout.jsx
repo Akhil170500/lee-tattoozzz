@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "MograActivity",
-  description: "MograActivity",
+  title: "Lee Tattoozzz",
+  description: "Lee Tattoozzz",
 };
 
 export default function RootLayout({ children }) {

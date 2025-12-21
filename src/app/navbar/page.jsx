@@ -60,7 +60,7 @@ const Navbar = () => {
   }, []);
 
   // Hide navbar on signin/signup pages
-  if (pathname === "/login/signin" || pathname === "/login/signup") {
+  if (pathname === "/login/signin" || pathname === "/login/signup" || pathname === "/") {
     return null;
   }
 
@@ -112,7 +112,7 @@ const Navbar = () => {
     { href: "/dashboard/user#gallery", label: "Gallery" },
     { href: "/dashboard/user#process", label: "Process" },
     { href: "/dashboard/user#faq", label: "FAQ" },
-    { href: "/dashboard/user#contact-us", label: "Contact" },
+    { href: "/dashboard/user#contact", label: "Contact" },
     { href: "/dashboard/user#about-us", label: "About" }
   ];
 
@@ -220,9 +220,21 @@ const Navbar = () => {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          <MenuItem onClick={handleClose}>
+          {/* <MenuItem onClick={handleClose}>
             <Avatar /> Profile
+          </MenuItem> */}
+          <MenuItem
+                  onClick={() => {
+                    router.push("user/profile")
+                    handleClose();
+                  }}
+          >
+            <ListItemIcon>
+              <Avatar fontSize="small" />
+            </ListItemIcon>
+            Profile
           </MenuItem>
+
           <MenuItem
             onClick={(e) => {
               e.stopPropagation();
