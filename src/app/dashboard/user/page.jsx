@@ -9,6 +9,7 @@ import Link from "next/link";
 import Feedback from "./feedback/page";
 import Process from "./process/page";
 import Contact from "./contact/page";
+import AppointmentBooking from "./appointment/page";
 
 const CLOUDINARY_BASE_URL =
   "https://res.cloudinary.com/dbqg53ryr/image/upload/";
@@ -96,6 +97,7 @@ const HeroPage = () => {
           >
             Individual style, limitless creativity: your story on the skin
           </Typography>
+          <Link href="/dashboard/user/#appointment">
           <Button
             variant="outlined"
             sx={{
@@ -112,6 +114,7 @@ const HeroPage = () => {
           >
             Make an Appointment
           </Button>
+          </Link>
         </Box>
 
         {/* Hero Image Right */}
@@ -531,11 +534,13 @@ const HeroPage = () => {
               ideas.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/dashboard/user/#appointment">
               <button className="bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300">
                 Schedule Consultation
               </button>
+              </Link>
 
-              <Link href="user/#contact">
+              <Link href="/dashboard/user/#contact">
               <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-black transition-colors duration-300">
                 Contact Us
               </button>
@@ -553,6 +558,11 @@ const HeroPage = () => {
       {/* Contact */}
       <div>
         <Contact/>
+      </div>
+
+      {/* Appointment */}
+      <div>
+        <AppointmentBooking/>
       </div>
 
 

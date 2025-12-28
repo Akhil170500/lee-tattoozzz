@@ -123,7 +123,7 @@ const Process = () => {
         {/* Reviews Section */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pt-8 border-t border-gray-300">
           {/* Left: Reviews Badge */}
-          <Link href="user/#feedback">
+          <Link href="/dashboard/user/#feedback">
           <div className="flex items-center gap-4">
             <div className="bg-black text-white px-6 py-3 rounded-full">
               <span className="font-bold text-lg">{reviewCount} REVIEWS</span>

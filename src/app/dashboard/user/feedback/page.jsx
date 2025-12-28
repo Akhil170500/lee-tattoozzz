@@ -102,7 +102,7 @@ const Feedback = () => {
             </h2>
             <div className="w-16 h-0.5 bg-black"></div>
           </div>
-<div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
+<div className="flex flex-col md:flex-row min-h-screen bg-gray-50 gap-6">
         {/* Feedback Form */}
       <form
         onSubmit={handleSubmit}

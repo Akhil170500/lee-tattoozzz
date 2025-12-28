@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { auth } from "../../firebase.config";
@@ -8,16 +9,13 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import SignOut from "./signout/page"; // this is your modal component
+import SignOut from "./signout/page"; // your modal component
 import { logout } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -91,7 +89,7 @@ const Navbar = () => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -121,17 +119,16 @@ const Navbar = () => {
       <div className="mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="text-xl font-bold">
-  <img
-    src="/images/logo.png"
-    alt="Tattoo Logo"
-    style={{
-      width: "35px",
-      height: "35px",
-      objectFit: "contain",
-    }}
-  />
-</div>
-
+          <img
+            src="/images/logo.png"
+            alt="Tattoo Logo"
+            style={{
+              width: "35px",
+              height: "35px",
+              objectFit: "contain",
+            }}
+          />
+        </div>
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center">
@@ -143,7 +140,7 @@ const Navbar = () => {
                 </Link>
               </Typography>
             ))}
-            
+
             <Tooltip title="Account settings">
               <IconButton
                 onClick={handleClick}
@@ -172,101 +169,103 @@ const Navbar = () => {
               <Avatar sx={{ width: 32, height: 32 }}>{profileName}</Avatar>
             </IconButton>
           </Tooltip>
-          
+
+          {/* Menu Button */}
           <IconButton
             onClick={toggleMobileMenu}
             size="large"
             aria-label="menu"
-            sx={{ color: 'white' }}
+            sx={{ color: "white" }} // No margin on the button, just normal display
           >
             {mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
         </div>
-
-        {/* Desktop Profile Dropdown Menu */}
-        <Menu
-          anchorEl={anchorEl}
-          id="account-menu"
-          open={open}
-          onClose={handleClose}
-          slotProps={{
-            paper: {
-              elevation: 0,
-              sx: {
-                overflow: "visible",
-                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                mt: 1.5,
-                "& .MuiAvatar-root": {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                "&::before": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  top: 0,
-                  right: 14,
-                  width: 10,
-                  height: 10,
-                  bgcolor: "background.paper",
-                  transform: "translateY(-50%) rotate(45deg)",
-                  zIndex: 0,
-                },
-              },
-            },
-          }}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        >
-          {/* <MenuItem onClick={handleClose}>
-            <Avatar /> Profile
-          </MenuItem> */}
-          <MenuItem
-                  onClick={() => {
-                    router.push("user/profile")
-                    handleClose();
-                  }}
-          >
-            <ListItemIcon>
-              <Avatar fontSize="small" />
-            </ListItemIcon>
-            Profile
-          </MenuItem>
-
-          <MenuItem
-            onClick={(e) => {
-              e.stopPropagation();
-              handleClose();
-              setOpenLogoutModal(true);
-            }}
-          >
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
-        </Menu>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-neutral-900 border-t border-gray-700 shadow-lg">
-          <div className="flex flex-col">
-            {navLinks.map((link, index) => (
+      {/* Profile Dropdown Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        slotProps={{
+          paper: {
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              "&::before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <MenuItem
+          onClick={() => {
+            // You can adjust the path if needed. Example below:
+            router.push("/dashboard/user/profile");
+            handleClose();
+          }}
+        >
+          <ListItemIcon>
+            <Avatar fontSize="small" />
+          </ListItemIcon>
+          Profile
+        </MenuItem>
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClose();
+            setOpenLogoutModal(true);
+          }}
+        >
+          <ListItemIcon>
+            <Logout fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
+
+      {/* Mobile Menu Overlay (Slide from Right with Margin) */}
+      <div
+        className={`${
+          mobileMenuOpen
+            ? "transform translate-x-0 transition-transform duration-300 ease-in-out"
+            : "transform translate-x-full transition-transform duration-300 ease-in-out"
+        } fixed top-0 right-0 w-64 h-full bg-neutral-900 z-50 shadow-lg mt-12`}
+      >
+        <ul className="pt-20 space-y-4 px-4">
+          {navLinks.map((link, index) => (
+            <li key={index}>
               <Link
-                key={index}
                 href={link.href}
-                className="px-4 text-white hover:bg-neutral-800 transition-colors border-b border-gray-700 last:border-b-0"
+                className="text-white hover:bg-neutral-800 py-2 px-4 rounded transition-colors"
                 onClick={closeMobileMenu}
               >
                 {link.label}
               </Link>
-            ))}
-          </div>
-        </div>
-      )}
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {/* Logout Modal */}
       <SignOut
