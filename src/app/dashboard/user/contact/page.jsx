@@ -29,7 +29,8 @@ const Contact = () => {
             {/* Left */}
             <div className="space-y-6">
               <a
-                href="tel:+919999999999"
+                href="tel:+9999999999"
+                // href="tel:+9113600698"
                 className="flex items-center gap-4 bg-neutral-900 p-6 rounded-lg border border-neutral-800 hover:border-neutral-700 transition"
               >
                 <span className="text-xl">
@@ -37,12 +38,14 @@ const Contact = () => {
                 </span>
                 <div>
                   <h3 className="text-lg font-bold">Call Us</h3>
-                  <p className="text-gray-400">+91 91136 00698</p>
+                  <p className="text-gray-400">+91 99999 99999</p>
+                  {/* <p className="text-gray-400">+91 91136 00698</p> */}
                 </div>
               </a>
 
               <a
-                href="https://wa.me/919113600698"
+                href=""
+                // href="https://wa.me/919113600698"
                 target="_blank"
                 className="flex items-center gap-4 bg-neutral-900 p-6 rounded-lg border border-neutral-800 hover:border-neutral-700 transition"
               >
@@ -56,7 +59,8 @@ const Contact = () => {
               </a>
 
               <a
-                href="https://instagram.com/leeetattoozs"
+                href=""
+                // href="https://instagram.com/leeetattoozs"
                 target="_blank"
                 className="flex items-center gap-4 bg-neutral-900 p-6 rounded-lg border border-neutral-800 hover:border-neutral-700 transition"
               >
