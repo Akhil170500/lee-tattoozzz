@@ -25,8 +25,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import emailjs from "emailjs-com";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AppointmentBooking = () => {
   const [note, setNote] = useState("");
@@ -87,8 +87,7 @@ const AppointmentBooking = () => {
       );
 
       const cloudinaryData = await cloudinaryRes.json();
-      if (!cloudinaryData.secure_url)
-        throw new Error("Image upload failed");
+      if (!cloudinaryData.secure_url) throw new Error("Image upload failed");
 
       const imageUrl = cloudinaryData.secure_url;
 
@@ -102,6 +101,11 @@ const AppointmentBooking = () => {
         createdAt: serverTimestamp(),
       });
 
+      const formattedDate = `${String(date.getDate()).padStart(
+        2,
+        "0"
+      )}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+
       /* ---- EmailJS ---- */
       await emailjs.send(
         "service_dwm110q",
@@ -109,11 +113,28 @@ const AppointmentBooking = () => {
         {
           to_email: "akhilkuruba1705@gmail.com",
           subject: "New Appointment Booking",
-          message: `User: ${user?.email}
-Note: ${note}
-Date: ${date.toLocaleDateString()}
+          message: `
+Hi Admin,
+
+A user has submitted a new appointment request.
+
+Here are the details:
+
+User Email: ${user?.email}
+Date: ${formattedDate}
 Time: ${time}
-Image: ${imageUrl}`,
+
+User Note:
+${note || "No additional notes."}
+
+Reference Image:
+${imageUrl}
+
+Please review and follow up with the user.
+
+Thanks,
+Appointment Notification
+`,
         },
         "e9JramyxYcvTamh_U"
       );
@@ -163,9 +184,16 @@ Image: ${imageUrl}`,
         : "#374151",
   });
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return `${String(d.getDate()).padStart(2, "0")}-${String(
+      d.getMonth() + 1
+    ).padStart(2, "0")}-${d.getFullYear()}`;
+  };
+
   return (
     <div className="px-6 md:px-20 py-12 md:py-20 bg-gray-50" id="appointment">
-        <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={3000} />
       {/* ===== HEADER ===== */}
       <div className="my-12">
         <h2 className="text-2xl md:text-3xl text-black font-bold font-serif mb-2">
@@ -259,7 +287,12 @@ Image: ${imageUrl}`,
             }}
           >
             Upload Image
-            <input hidden type="file" accept="image/*" onChange={handleFileSelect} />
+            <input
+              hidden
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+            />
           </Button>
 
           {image && (
@@ -330,10 +363,10 @@ Image: ${imageUrl}`,
                           display="flex"
                           justifyContent="space-between"
                           mb={0.5}
+                          className="flex-wrap items-center"
                         >
                           <Typography fontWeight={600}>
-                            {new Date(item.date).toLocaleDateString()} •{" "}
-                            {item.time}
+                            {formatDate(item.date)} • {item.time}
                           </Typography>
 
                           <Typography
@@ -345,6 +378,7 @@ Image: ${imageUrl}`,
                               color: style.color,
                               fontSize: 12,
                               fontWeight: 600,
+                              width: "max-content",
                             }}
                           >
                             {status}

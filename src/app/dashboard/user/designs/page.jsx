@@ -1,7 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardMedia, Typography, Box, TextField, InputAdornment, Container, Fade, Skeleton, Modal, IconButton, Chip, Divider } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  Typography,
+  Box,
+  TextField,
+  InputAdornment,
+  Container,
+  Fade,
+  Skeleton,
+  Modal,
+  IconButton,
+  Chip,
+  Divider,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -9,9 +23,11 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import { db } from "../../../../firebase.config";
 import { collection, getDocs } from "firebase/firestore";
+import { TfiMenuAlt } from "react-icons/tfi";
 import { useRouter } from "next/navigation";
 
-const CLOUDINARY_BASE_URL = "https://res.cloudinary.com/dbqg53ryr/image/upload/";
+const CLOUDINARY_BASE_URL =
+  "https://res.cloudinary.com/dbqg53ryr/image/upload/";
 
 const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
   const [allImages, setAllImages] = useState([]);
@@ -20,7 +36,10 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showMobileDetails, setShowMobileDetails] = useState(false);
   const router = useRouter();
+
+  console.log("aaaaaaaaaaa", selectedImage);
 
   const fetchAllImages = async () => {
     setLoading(true);
@@ -30,18 +49,28 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
 
       snapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.imageFiles && Array.isArray(data.imageFiles)) {
+
+        if (Array.isArray(data.imageFiles)) {
           data.imageFiles.forEach((fileName, idx) => {
-            const imageObj = {
+            images.push({
               id: `${doc.id}-${idx}`,
-              url: `${CLOUDINARY_BASE_URL}${fileName}.png`,
-              title: data.title || "Untitled",
               docId: doc.id,
-            };
-            images.push(imageObj);
+
+              // image
+              url: `${CLOUDINARY_BASE_URL}${fileName}.png`,
+
+              // basic
+              title: data.title || "Untitled",
+              description: data.description || "",
+
+              // details from Firebase
+              bodyPart: data.bodyPart || "",
+              category: data.category || "",
+              measurement: data.measurement || "",
+              designId: data.design_id || "",
+              createdAt: data.createdAt || null,
+            });
           });
-        } else {
-          console.error("No imageFiles array in this doc.");
         }
       });
 
@@ -63,7 +92,7 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
     if (searchTerm.trim() === "") {
       setFilteredImages(allImages);
     } else {
-      const filtered = allImages.filter(img =>
+      const filtered = allImages.filter((img) =>
         img.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredImages(filtered);
@@ -78,7 +107,7 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
     setSelectedImage(() => {
       return img;
     });
-    
+
     setModalOpen(() => {
       return true;
     });
@@ -90,7 +119,7 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
   };
 
   const handleDownload = (imageUrl, title) => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = imageUrl;
     link.download = `${title}.png`;
     document.body.appendChild(link);
@@ -99,12 +128,12 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
   };
 
   return (
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         minHeight: "100vh",
         background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)",
         pt: { xs: 10, sm: 12 }, // Add top padding to account for fixed navbar
-        pb: 6
+        pb: 6,
       }}
     >
       <Container maxWidth="xl" className="container">
@@ -120,7 +149,7 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
               backgroundClip: "text",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              mb: 2
+              mb: 2,
             }}
           >
             Design Gallery
@@ -131,10 +160,11 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
               color: "grey.400",
               maxWidth: "600px",
               mx: "auto",
-              lineHeight: 1.6
+              lineHeight: 1.6,
             }}
           >
-            Discover stunning designs and creative inspirations from our curated collection
+            Discover stunning designs and creative inspirations from our curated
+            collection
           </Typography>
         </Box>
 
@@ -178,7 +208,9 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: 28 }} />
+                  <SearchIcon
+                    sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: 28 }}
+                  />
                 </InputAdornment>
               ),
             }}
@@ -188,11 +220,13 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
         {/* Results Info */}
         {!loading && (
           <Box sx={{ mb: 4, textAlign: "center" }}>
-            <Typography variant="body1" sx={{ color: "grey.300", fontSize: "1.1rem" }}>
-              {searchTerm 
+            <Typography
+              variant="body1"
+              sx={{ color: "grey.300", fontSize: "1.1rem" }}
+            >
+              {searchTerm
                 ? `Found ${filteredImages.length} of ${allImages.length} designs`
-                : `${allImages.length} designs available`
-              }
+                : `${allImages.length} designs available`}
             </Typography>
           </Box>
         )}
@@ -200,34 +234,44 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
         {/* Loading State */}
         {loading && (
           <Box sx={{ mb: 4 }}>
-            <Typography 
-              sx={{ 
-                color: "grey.400", 
-                textAlign: "center", 
+            <Typography
+              sx={{
+                color: "grey.400",
+                textAlign: "center",
                 mb: 4,
-                fontSize: "1.1rem"
+                fontSize: "1.1rem",
               }}
             >
               Loading amazing designs...
             </Typography>
-            <Box 
-              sx={{ 
+            <Box
+              sx={{
                 display: "grid",
                 gridTemplateColumns: {
                   xs: "repeat(2, 1fr)",
                   sm: "repeat(3, 1fr)",
                   md: "repeat(4, 1fr)",
                   lg: "repeat(5, 1fr)",
-                  xl: "repeat(6, 1fr)"
+                  xl: "repeat(6, 1fr)",
                 },
                 gap: 3,
               }}
             >
               {[...Array(12)].map((_, index) => (
-                <Card key={index} sx={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
-                  <Skeleton variant="rectangular" height={200} sx={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }} />
+                <Card
+                  key={index}
+                  sx={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+                >
+                  <Skeleton
+                    variant="rectangular"
+                    height={200}
+                    sx={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                  />
                   <Box sx={{ p: 2 }}>
-                    <Skeleton variant="text" sx={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                    />
                   </Box>
                 </Card>
               ))}
@@ -238,13 +282,13 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
         {/* No Results */}
         {!loading && filteredImages.length === 0 && searchTerm && (
           <Fade in={true}>
-            <Box 
-              sx={{ 
-                textAlign: "center", 
+            <Box
+              sx={{
+                textAlign: "center",
                 py: 8,
                 background: "rgba(255, 255, 255, 0.02)",
                 borderRadius: 4,
-                border: "1px solid rgba(255, 255, 255, 0.1)"
+                border: "1px solid rgba(255, 255, 255, 0.1)",
               }}
             >
               <Typography variant="h5" sx={{ color: "grey.300", mb: 2 }}>
@@ -260,8 +304,8 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
         {/* Image Gallery */}
         {!loading && filteredImages.length > 0 && (
           <Fade in={true}>
-            <Box 
-              sx={{ 
+            <Box
+              sx={{
                 display: "grid",
                 gridTemplateColumns: {
                   xs: "repeat(auto-fill, minmax(250px, 1fr))",
@@ -269,7 +313,7 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                   md: "repeat(auto-fill, minmax(300px, 1fr))",
                 },
                 gap: 4,
-                mb: 6
+                mb: 6,
               }}
             >
               {filteredImages.map((img, index) => (
@@ -286,14 +330,15 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                       background: "rgba(255, 255, 255, 0.05)",
                       backdropFilter: "blur(10px)",
                       border: "1px solid rgba(255, 255, 255, 0.1)",
-                      transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                      "&:hover": { 
+                      transition:
+                        "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                      "&:hover": {
                         transform: "translateY(-12px) scale(1.02)",
                         boxShadow: "0 25px 50px rgba(0, 0, 0, 0.5)",
                         border: "1px solid rgba(255, 255, 255, 0.2)",
                         "& .image-overlay": {
                           opacity: 1,
-                        }
+                        },
                       },
                     }}
                   >
@@ -324,7 +369,8 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                           left: 0,
                           width: "100%",
                           height: "100%",
-                          background: "linear-gradient(45deg, rgba(33, 150, 243, 0.3), rgba(156, 39, 176, 0.3))",
+                          background:
+                            "linear-gradient(45deg, rgba(33, 150, 243, 0.3), rgba(156, 39, 176, 0.3))",
                           opacity: 0,
                           transition: "opacity 0.3s ease",
                           display: "flex",
@@ -337,7 +383,7 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                             color: "white",
                             fontWeight: "bold",
                             fontSize: "1.2rem",
-                            textShadow: "0 2px 4px rgba(0,0,0,0.5)"
+                            textShadow: "0 2px 4px rgba(0,0,0,0.5)",
                           }}
                         >
                           View Details
@@ -347,13 +393,13 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                     <Box sx={{ p: 3 }}>
                       <Typography
                         variant="h6"
-                        sx={{ 
-                          color: "white", 
-                          fontWeight: 600, 
+                        sx={{
+                          color: "white",
+                          fontWeight: 600,
                           textAlign: "center",
                           fontSize: "1.1rem",
                           textTransform: "capitalize",
-                          letterSpacing: "0.5px"
+                          letterSpacing: "0.5px",
                         }}
                         noWrap
                       >
@@ -367,313 +413,224 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
           </Fade>
         )}
 
-{/* Clean Modal Popup */}
-{modalOpen && selectedImage && (
-  <Box
-    sx={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      backgroundColor: 'rgba(0, 0, 0, 0.92)',
-      zIndex: 9999,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      p: 2,
-    }}
-    onClick={handleCloseModal}
-  >
-    <Box
-      sx={{
-        background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
-        borderRadius: 3,
-        width: '95vw',
-        maxWidth: '1200px',
-        maxHeight: '90vh',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: { xs: 'column', md: 'row' },
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
-        position: 'relative',
-      }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Close Button */}
-      <IconButton
-        onClick={handleCloseModal}
-        sx={{
-          position: 'absolute',
-          top: 16,
-          right: 16,
-          zIndex: 10,
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          }
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
-
-      {/* Image Section */}
-      <Box
-        sx={{
-          flex: 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          p: 4,
-          minHeight: { xs: '50vh', md: '70vh' },
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        }}
-      >
-        <img
-          src={selectedImage.url}
-          alt={selectedImage.title}
-          style={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-            objectFit: 'contain',
-            borderRadius: '8px',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-          }}
-        />
-      </Box>
-
-      {/* Details Section */}
-      <Box
-        sx={{
-          flex: 1,
-          minWidth: { md: '350px' },
-          maxWidth: { md: '400px' },
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          borderLeft: { md: '1px solid rgba(255, 255, 255, 0.1)' },
-          borderTop: { xs: '1px solid rgba(255, 255, 255, 0.1)', md: 'none' },
-        }}
-      >
-        {/* Header */}
-        <Box sx={{ p: 4, borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-          <Typography
-            variant="h5"
-            sx={{
-              color: 'white',
-              fontWeight: 600,
-              mb: 2,
-              textTransform: 'capitalize',
-              lineHeight: 1.3,
-            }}
-          >
-            {selectedImage.title || 'Untitled Design'}
-          </Typography>
-          {selectedImage.description && (
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'rgba(255, 255, 255, 0.6)',
-                fontSize: '0.9rem',
-              }}
-            >
-              {selectedImage.description}
-            </Typography>
-          )}
-        </Box>
-
-        {/* Details Content */}
-        <Box sx={{ p: 4, flex: 1 }}>
-          {/* Basic Information */}
-          <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="subtitle2"
-              sx={{
-                color: 'rgba(255, 255, 255, 0.8)',
-                fontWeight: 600,
-                mb: 2,
-                fontSize: '0.875rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}
-            >
-              Information
-            </Typography>
-
-            <Box sx={{ space: 2 }}>
-              {selectedImage.type && (
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
-                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                    Type
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
-                    {selectedImage.type}
-                  </Typography>
-                </Box>
-              )}
-
-              {selectedImage.body && (
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
-                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                    Body
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
-                    {selectedImage.body}
-                  </Typography>
-                </Box>
-              )}
-
-              {selectedImage.category && (
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
-                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                    Category
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
-                    {selectedImage.category}
-                  </Typography>
-                </Box>
-              )}
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                  Document ID
-                </Typography>
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    color: 'rgba(255, 255, 255, 0.8)', 
-                    fontFamily: 'monospace',
-                    fontSize: '0.75rem',
-                  }}
-                >
-                  {selectedImage.docId}
-                </Typography>
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                  Image ID
-                </Typography>
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    color: 'rgba(255, 255, 255, 0.8)', 
-                    fontFamily: 'monospace',
-                    fontSize: '0.75rem',
-                  }}
-                >
-                  {selectedImage.id}
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-
-          {/* Category Tags */}
-          {selectedImage.tags && selectedImage.tags.length > 0 && (
-            <Box sx={{ mb: 4 }}>
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontWeight: 600,
-                  mb: 2,
-                  fontSize: '0.875rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                Tags
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {selectedImage.tags.map((tag, index) => (
-                  <Chip
-                    key={index}
-                    label={tag}
-                    size="small"
-                    sx={{
-                      backgroundColor: index % 2 === 0 ? 'rgba(33, 150, 243, 0.2)' : 'rgba(156, 39, 176, 0.2)',
-                      color: index % 2 === 0 ? '#2196F3' : '#9C27B0',
-                      border: `1px solid ${index % 2 === 0 ? 'rgba(33, 150, 243, 0.3)' : 'rgba(156, 39, 176, 0.3)'}`,
-                      fontSize: '0.75rem',
-                    }}
-                  />
-                ))}
-              </Box>
-            </Box>
-          )}
-
-          {/* Description */}
-          {selectedImage.longDescription && (
-            <Box>
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontWeight: 600,
-                  mb: 2,
-                  fontSize: '0.875rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                Description
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  lineHeight: 1.6,
-                  fontSize: '0.875rem',
-                }}
-              >
-                {selectedImage.longDescription}
-              </Typography>
-            </Box>
-          )}
-        </Box>
-
-        {/* Footer Action */}
-        {/* <Box 
-          sx={{ 
-            p: 4, 
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-          }}
-        >
+        {/* Clean Modal Popup */}
+        {modalOpen && selectedImage && (
           <Box
-            onClick={() => handleDownload(selectedImage.url, selectedImage.title)}
+            onClick={handleCloseModal}
             sx={{
-              width: '100%',
-              py: 2.5,
-              backgroundColor: '#2196F3',
-              color: 'white',
-              borderRadius: 2,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 1.5,
-              cursor: 'pointer',
-              fontWeight: 600,
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                backgroundColor: '#1976D2',
-                transform: 'translateY(-2px)',
-                boxShadow: '0 8px 25px rgba(33, 150, 243, 0.3)',
-              }
+              position: "fixed",
+              inset: 0,
+              backgroundColor: "rgba(0,0,0,0.9)",
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              p: 2,
             }}
           >
-            <DownloadIcon sx={{ fontSize: 20 }} />
-            <Typography variant="body2" fontWeight="600">
-              Download Image
-            </Typography>
+            <Box
+              onClick={(e) => e.stopPropagation()}
+              sx={{
+                width: "95vw",
+                maxWidth: 1200,
+                maxHeight: "90vh",
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                backgroundColor: "#0f0f0f",
+                borderRadius: 3,
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              {/* CLOSE BUTTON */}
+              <IconButton
+                onClick={handleCloseModal}
+                sx={{
+                  position: "absolute",
+                  top: 8,
+                  right: 8,
+                  zIndex: 20,
+                  backgroundColor: "rgba(0,0,0,0.6)",
+                  color: "#fff",
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+
+              {/* IMAGE SECTION (ALWAYS VISIBLE) */}
+              <Box
+                sx={{
+                  flex: 2,
+                  position: "relative",
+                  backgroundColor: "#000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {/* MOBILE 3 DOT MENU */}
+                <IconButton
+                  onClick={() => setShowMobileDetails(true)}
+                  sx={{
+                    display: { xs: "flex", md: "none" },
+                    position: "absolute",
+                    top: 8,
+                    left: 8,
+                    zIndex: 15,
+                    backgroundColor: "rgba(0,0,0,0.6)",
+                    color: "#fff",
+                  }}
+                >
+                  <TfiMenuAlt />
+                </IconButton>
+
+                <img
+                  src={selectedImage.url}
+                  alt={selectedImage.title}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />
+
+                {/* MOBILE DETAILS OVERLAY */}
+                {showMobileDetails && (
+                  <Box
+                    onClick={() => setShowMobileDetails(false)}
+                    sx={{
+                      position: "absolute",
+                      inset: 0,
+                      backgroundColor: "rgba(0,0,0,0.75)",
+                      backdropFilter: "blur(8px)",
+                      zIndex: 14,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <Box
+                      onClick={(e) => e.stopPropagation()}
+                      sx={{
+                        width: "100%",
+                        maxHeight: "65%",
+                        backgroundColor: "#121212",
+                        borderTopLeftRadius: 16,
+                        borderTopRightRadius: 16,
+                        p: 2,
+                        overflowY: "auto",
+                      }}
+                    >
+                      <Typography
+                        sx={{ color: "#fff", fontWeight: 600, mb: 1 }}
+                      >
+                        {selectedImage.title}
+                      </Typography>
+
+                      {selectedImage.description && (
+                        <Typography
+                          sx={{
+                            color: "rgba(255,255,255,0.6)",
+                            fontSize: "0.85rem",
+                            mb: 1.5,
+                          }}
+                        >
+                          {selectedImage.description}
+                        </Typography>
+                      )}
+
+                      {[
+                        { label: "Body Part", value: selectedImage.bodyPart },
+                        { label: "Category", value: selectedImage.category },
+                        {
+                          label: "Measurement",
+                          value: selectedImage.measurement,
+                        },
+                      ].map(
+                        (item, i) =>
+                          item.value && (
+                            <Box
+                              key={i}
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                py: 0.75,
+                                fontSize: "0.8rem",
+                              }}
+                            >
+                              <Typography
+                                sx={{ color: "rgba(255,255,255,0.5)" }}
+                              >
+                                {item.label}
+                              </Typography>
+                              <Typography
+                                sx={{ color: "#fff", fontWeight: 500 }}
+                              >
+                                {item.value}
+                              </Typography>
+                            </Box>
+                          )
+                      )}
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+
+              {/* DESKTOP DETAILS (UNCHANGED) */}
+              <Box
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  flex: 1,
+                  flexDirection: "column",
+                  backgroundColor: "#121212",
+                  borderLeft: "1px solid rgba(255,255,255,0.08)",
+                  p: 3,
+                }}
+              >
+                <Typography sx={{ color: "#fff", fontWeight: 600, mb: 1 }}>
+                  {selectedImage.title}
+                </Typography>
+
+                {selectedImage.description && (
+                  <Typography
+                    sx={{
+                      color: "rgba(255,255,255,0.6)",
+                      fontSize: "0.9rem",
+                      mb: 2,
+                    }}
+                  >
+                    {selectedImage.description}
+                  </Typography>
+                )}
+
+                {[
+                  { label: "Body Part", value: selectedImage.bodyPart },
+                  { label: "Category", value: selectedImage.category },
+                  { label: "Measurement", value: selectedImage.measurement },
+                ].map(
+                  (item, i) =>
+                    item.value && (
+                      <Box
+                        key={i}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          py: 1,
+                        }}
+                      >
+                        <Typography sx={{ color: "rgba(255,255,255,0.6)" }}>
+                          {item.label}
+                        </Typography>
+                        <Typography sx={{ color: "#fff", fontWeight: 500 }}>
+                          {item.value}
+                        </Typography>
+                      </Box>
+                    )
+                )}
+              </Box>
+            </Box>
           </Box>
-        </Box> */}
-      </Box>
-    </Box>
-  </Box>
-)}
+        )}
 
         {/* Original single card section (if needed) */}
         {(image || title) && (
@@ -689,9 +646,9 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                 backdropFilter: "blur(10px)",
                 border: "1px solid rgba(255, 255, 255, 0.1)",
                 transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                "&:hover": { 
+                "&:hover": {
                   transform: "translateY(-8px)",
-                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)"
+                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
                 },
               }}
             >
@@ -699,19 +656,19 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                 <Box sx={{ p: 4, textAlign: "center" }}>
                   <Typography
                     variant="h4"
-                    sx={{ 
-                      color: "white", 
+                    sx={{
+                      color: "white",
                       fontWeight: "bold",
-                      mb: 2
+                      mb: 2,
                     }}
                   >
                     {title}
                   </Typography>
                   <Typography
                     variant="body1"
-                    sx={{ 
+                    sx={{
                       color: "grey.400",
-                      fontSize: "1rem"
+                      fontSize: "1rem",
                     }}
                   >
                     Explore our complete collection
@@ -737,11 +694,11 @@ const HeroCard = ({ image, title, onClick, isSeeMore = false }) => {
                   <Box sx={{ p: 3 }}>
                     <Typography
                       variant="h6"
-                      sx={{ 
-                        color: "white", 
-                        fontWeight: 600, 
+                      sx={{
+                        color: "white",
+                        fontWeight: 600,
                         textAlign: "center",
-                        fontSize: "1.2rem"
+                        fontSize: "1.2rem",
                       }}
                       noWrap
                     >
